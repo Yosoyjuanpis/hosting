@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cámaras de Reversa - Mercateck</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+<header>
+    <h1>Cámaras de Reversa</h1>
+</header>
+
+<nav>
+    <a href="index.html">Inicio</a>
+    <a href="radios.html">Radios</a>
+    <a href="luces.html">Luces LED</a>
+    <a href="antiempañante.html">Antiempañante</a>
+    <div class="menu_desplegable">
+        <button class="soltar">Contáctanos</button>
+        <div class="contenido-desplegable">
+            <a href="https://www.facebook.com/profile.php?id=100068966515218" target="_blank" aria-label="Facebook">
+                <i class="fab fa-facebook" style="color: #4267B2;"></i> Facebook
+            </a>
+            <a href="https://www.instagram.com/mercateck01/" target="_blank" aria-label="Instagram">
+                <i class="fab fa-instagram" style="color: #E4405F;"></i> Instagram
+            </a>
+            <a href="https://www.tiktok.com/@mercateck01" target="_blank" aria-label="TikTok">
+                <i class="fab fa-tiktok" style="color: #000000;"></i> TikTok
+            </a>
+        </div>
+    </div>
+
+    <div class="menu_desplegable">
+        <button class="soltar">Acerca de nosotros</button>
+        <div class="contenido-desplegable">
+            <a href="quienes_somos.html">Quiénes Somos</a>
+            <a href="beneficios_mercateck.html">Beneficios de Mercateck</a>
+            <a href="mision_vision.html">Misión y Visión</a>
+            <a href="objetivos_generales.html">Objetivos Generales</a>
+        </div>
+    </div>
+
+    <!-- Botón para abrir el carrito -->
+    <button id="cartBtn">Ver Carrito (<span id="cartCount">0</span>)</button>
+</nav>
+
+<main class="container">
+    <h2>Cámaras de Reversa Disponibles</h2>
+    <div class="producto">
+        <img src="imagenes/catalogo Mercateck_page-0005.jpg" alt="Cámara Modelo A">
+        <h3>Cámara Modelo A</h3>
+        <p>Cámara Modelo A.</p>
+        <p><strong>$50,000</strong></p>
+        <button class="agregar" data-producto="Cámara Modelo A" data-precio="50000" data-stock="10">Agregar al carrito</button>
+    </div>
+    <div class="producto">
+        <img src="imagenes/catalogo Mercateck_page-0006.jpg" alt="Cámara Modelo B">
+        <h3>Cámara Modelo B</h3>
+        <p>Cámara Modelo B.</p>
+        <p><strong>$60,000</strong></p>
+        <button class="agregar" data-producto="Cámara Modelo B" data-precio="60000" data-stock="8">Agregar al carrito</button>
+    </div>
+</main>
+
+<!-- Modal de Carrito -->
+<div id="cartModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Tu Carrito</h2>
+        <ul id="cartItems">
+            <!-- Los productos del carrito aparecerán aquí -->
+        </ul>
+        <p><strong>Total: $<span id="cartTotal">0</span></strong></p>
+        <button onclick="checkout()">Finalizar compra</button>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    <h2>Contactos</h2>
+    <section id="contactos">
+        <p>¡Si deseas más información, no dudes en contactarnos!</p>
+        <p>
+            Síguenos en 
+            <a href="https://www.facebook.com/profile.php?id=100068966515218" target="_blank" aria-label="Facebook">
+                <i class="fab fa-facebook" style="color: #4267B2;"></i> Merca Teck 
+            </a>
+        </p>
+        <p>
+            Síguenos en 
+            <a href="https://www.instagram.com/mercateck01/" target="_blank" aria-label="Instagram">
+                <i class="fab fa-instagram" style="color: #E4405F;"></i> Merca Teck 
+            </a>
+        </p>
+        <p>
+            Síguenos en 
+            <a href="https://www.tiktok.com/@mercateck01" target="_blank" aria-label="TikTok">
+                <i class="fab fa-tiktok" style="color: #000000;"></i> Merca Teck 
+            </a>
+        </p>
+    </section>
+    <p>&copy; 2024 Tienda de Mercateck Accesorios para Carros. Todos los derechos reservados.</p>
+</footer>
+
+<!-- Script para el carrito con control de stock y modal -->
+<script>
+    // Variables globales del carrito
+    let cart = [];
+    let cartCount = document.getElementById("cartCount");
+    let cartModal = document.getElementById("cartModal");
+    let cartItems = document.getElementById("cartItems");
+    let cartTotal = document.getElementById("cartTotal");
+
+    function agregarAlCarrito(producto, precio, stock, button) {
+        if (stock > 0) {
+            const item = { producto, precio };
+            cart.push(item);  // Se agrega al carrito
+            actualizarCarrito();
+            stock -= 1; // Disminuir el stock
+            button.setAttribute('data-stock', stock); // Actualiza el stock en el botón
+    
+            // Si el stock llega a cero, deshabilitar el botón y cambiar su texto
+            if (stock === 0) {
+                button.disabled = true;
+                button.textContent = 'Agotado';
+            }
+        } else {
+            alert("Este producto está agotado.");
+        }
+    }
+
+    function actualizarCarrito() {
+        // Actualiza el carrito en el modal
+        cartCount.textContent = cart.length;
+        cartItems.innerHTML = "";
+        let total = 0;
+        cart.forEach(item => {
+            const li = document.createElement("li");
+            li.textContent = `${item.producto} - $${item.precio}`;
+            cartItems.appendChild(li);
+            total += item.precio;
+        });
+
+        cartTotal.textContent = total;  // Actualiza el total en el modal
+    }
+
+    // Modal de carrito
+    function openCart() {
+        cartModal.style.display = "block";
+    }
+
+    function closeCart() {
+        cartModal.style.display = "none";
+    }
+
+    function checkout() {
+        alert("¡Gracias por tu compra!");
+        cart = []; // Vaciamos el carrito
+        actualizarCarrito();
+        closeCart();
+    }
+
+    // Control de los botones de agregar al carrito
+    document.querySelectorAll('.agregar').forEach(button => {
+        button.addEventListener('click', () => {
+            const producto = button.getAttribute('data-producto');
+            const precio = parseInt(button.getAttribute('data-precio'));
+            let stock = parseInt(button.getAttribute('data-stock'));
+            agregarAlCarrito(producto, precio, stock, button);
+        });
+    });
+
+    // Event listeners para abrir y cerrar el modal
+    document.getElementById("cartBtn").addEventListener("click", openCart);
+    const closeBtn = document.getElementsByClassName("close")[0];
+    closeBtn.onclick = () => closeCart();
+
+    // Si el modal se cierra al hacer clic fuera del modal
+    window.onclick = (event) => {
+        if (event.target === cartModal) {
+            closeCart();
+        }
+    };
+</script>
+
+</body>
+</html>
